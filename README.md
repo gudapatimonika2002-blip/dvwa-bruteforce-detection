@@ -1,89 +1,130 @@
-# dvwa-bruteforce-detection 🔍
+# Detection and Analysis of Brute-Force Login Attempts on a Local DVWA Instance
 
-A compact, forensic-style project that demonstrates how to detect brute-force login activity against a DVWA (Damn Vulnerable Web Application) instance by analyzing web server access logs.
+## 1. Project Overview
 
-This repo includes an example Apache access log, a processed timeline of detected events, and screenshots illustrating failed and successful login attempts. The aim is to show how simple log analysis and timeline-building techniques can expose brute-force behavior.
+This project demonstrates how a brute-force login attack can be **simulated, detected, and analyzed** on a vulnerable web application in a controlled lab environment.
 
----
+We used **Damn Vulnerable Web Application (DVWA)** running on a local **XAMPP** stack and generated repeated login attempts against the DVWA login page. The resulting HTTP traffic was captured in **Apache access logs**, and a **detection timeline** was created to highlight suspicious login patterns.
 
-## What's included ✅
+The repository includes:
 
 - `data/raw_logs/access.log` — example Apache access log captured from a DVWA instance.
 - `data/processed/Detection Timeline (from access.log).xlsx` — a spreadsheet showing extracted / analyzed events and a timeline derived from the raw log.
-- `screenshots/` — images showing the DVWA login page and example failed attempts (useful for reports / presentations).
+- `screenshots/` — images showing the DVWA login page and example failed attempts.
+The main goal is to show how basic **log analysis** can reveal brute-force behavior, which is an important skill in cybersecurity and digital forensics.
 
-There are no analysis scripts included in this repo; the analysis was performed manually and via spreadsheet. See the Usage section for suggested commands and a quick-analysis recipe.
-
-## Project goals 🎯
-
-- Demonstrate how to detect brute-force login attempts in web server logs.
-- Provide a minimal dataset and timeline visualization to practice forensic workflows.
-- Offer reproducible example commands and next steps for building automated detection scripts.
-
-## Log patterns used to detect failed/successful attempts
-
-When analyzing the included Apache `access.log` you'll see common patterns that can be used to infer login success vs failure:
-
-- Repeated `POST /dvwa/login.php` followed by `GET /dvwa/login.php` indicates repeated login POSTs that redirect back to the login page — common for failed login attempts.
-- `POST /dvwa/login.php` followed by a `GET /dvwa/index.php` indicates a successful login (the app redirected to the index page after successful auth).
-
-These patterns are useful for quick forensic triage and automated detection rules.
-
-## Quick analysis examples (command-line)
-
-Below are small shell examples to extract and inspect login-related lines from `access.log`. On Windows PowerShell just run the same commands translated to PowerShell as noted.
-
-1) Show all login-related lines (Bash / WSL / macOS / Linux):
-
-```bash
-grep "/dvwa/login.php" data/raw_logs/access.log
-```
-
-PowerShell equivalent:
-
-```powershell
-Select-String -Path data\raw_logs\access.log -Pattern '/dvwa/login.php'
-```
-
-2) Extract POSTs and look for repeated sequences (Bash):
-
-```bash
-grep 'POST /dvwa/login.php' data/raw_logs/access.log | cut -d' ' -f1,4,5,6,7,8,9
-```
-
-3) Find POSTs that were followed by an index.php GET (likely successful logins):
-
-```bash
-grep 'POST /dvwa/login.php' -n data/raw_logs/access.log
-# note the resulting line numbers and see the next few lines — if the next GET is /dvwa/index.php it's likely a success
-```
-
-For a robust, reproducible workflow use a simple Python or pandas script to parse, group by remote IP, and analyze sequences/timestamps.
-
-## Suggested next steps / improvements 🔧
-
-- Add a Python or Jupyter notebook parser to turn `access.log` into a structured CSV (fields: timestamp, IP, method, url, status, user-agent), then detect sliding-window bursts of failed attempts.
-- Integrate into a SIEM or ELK/OSquery pipeline for live detection and alerts.
-- Create visualizations (time-series plots per IP, heatmaps) from the processed excel timeline.
-
-## How to reproduce locally — minimal guidance
-
-1. Install XAMPP / Apache & set up DVWA locally (or use a captured access.log file).
-2. Place the server access log at `data/raw_logs/access.log`.
-3. Use one of the CLI examples above or load the file into a spreadsheet/Notebook to build a timeline.
-
-## Contributing 🙌
-
-If you'd like to add detection scripts, notebooks, or automation — please open an issue or submit a PR. Useful additions:
-
-- a parser script to export CSV/JSON
-- a Jupyter Notebook with step-by-step analysis and plots
-- automated tests and a small sample dataset generator
-
-## License
-
-This repository does not include a license file. If you want permissive reuse please add a LICENSE (e.g., MIT) or state the desired license in a new PR.
 
 ---
 
-If you'd like, I can also add a reproducible script / notebook to parse `access.log` and detect the failed- vs successful-login sequences automatically — would you like me to implement that next? ✅
+## 2. Project Relevance
+
+Brute-force login attacks are one of the most common and persistent threats against web applications. An attacker repeatedly tries different username/password combinations until one works. If such activity goes undetected, it can lead to:
+
+- Unauthorized access to user accounts or admin panels  
+- Compromise of sensitive data  
+- Service disruption or account lockouts  
+- Further lateral movement inside a network  
+
+This project is relevant to:
+
+- **Cybersecurity** – understanding how attacks appear in server logs and how to detect them  
+- **Digital Forensics** – collecting, preserving, and interpreting log-based evidence  
+- **System/Network Administration** – learning how to monitor authentication activity and design defenses  
+
+**Why we chose this topic:**
+
+- It is hands-on but safe to perform in a local lab environment.  
+- It connects directly to real-world attack techniques.  
+- It helps build practical skills in:
+  - Working with vulnerable web apps (DVWA)  
+  - Understanding HTTP requests and status codes  
+  - Reading and interpreting Apache logs  
+  - Building a simple detection timeline from raw data  
+
+**Who can benefit from this project:**
+
+- Students learning cybersecurity and digital forensics  
+- Entry-level analysts learning how to read logs  
+- System administrators interested in basic brute-force detection strategies  
+
+
+---
+
+## 3. Methodology
+
+### 3.1 Environment Setup
+
+**Tools and Environment:**
+
+- **Operating System:** Windows  
+- **Web Server Stack:** XAMPP (Apache + MySQL)  
+- **Vulnerable Web Application:** DVWA (Damn Vulnerable Web Application)  
+- **Browser:** Chrome  
+- **Data Analysis:** Excel (for detection timeline)  
+- **Version Control:** Git + GitHub  
+
+**Steps:**
+
+1. **Install XAMPP**  
+   - Downloaded from ApacheFriends and installed on Windows.  
+   - Started **Apache** and **MySQL** using the XAMPP Control Panel.
+
+2. **Deploy DVWA in XAMPP**  
+   - Downloaded the DVWA ZIP.  
+   - Extracted and placed the folder into:
+     ```text
+     C:\xampp\htdocs\dvwa
+     ```
+   - Opened the setup page:
+     ```text
+     http://localhost/dvwa/setup.php
+     ```
+
+3. **Configure DVWA Database Connection**  
+   - Copied `config/config.inc.php.dist` → `config/config.inc.php`.  
+   - Updated database credentials to match XAMPP defaults:
+     ```php
+     $_DVWA['db_user']     = 'root';
+     $_DVWA['db_password'] = '';
+     ```
+   - Clicked **“Create / Reset Database”** on the DVWA setup page.
+
+4. **Log in to DVWA**  
+   - Default credentials:
+     - **Username:** `admin`  
+     - **Password:** `password`  
+   - Verified access to the DVWA dashboard.
+
+5. **Set DVWA Security Level to LOW**  
+   - Opened `DVWA Security` page.  
+   - Changed security level to **LOW** and submitted.  
+   - This allowed brute-force-style behavior without advanced protections.
+
+---
+
+### 3.2 Brute-Force Attack Simulation
+
+The brute-force behavior was simulated manually in a safe, controlled way:
+
+1. Logged out of DVWA to return to the login page.  
+2. Performed multiple login attempts with:
+   - Correct username: `admin`  
+   - Incorrect passwords (various values), for example:
+     - `wrongpassword1`, `wrongpassword2`, `1233456`, `test1234`, etc.
+3. Repeated **multiple POST requests** to `/dvwa/login.php` within short time intervals.
+4. This generated a burst of **failed login attempts** that are visible as repeated `POST /dvwa/login.php` entries in the Apache access log.
+
+Although the attack was not automated with a tool like Burp Suite or Hydra, the pattern of rapid, repeated login attempts still mimics a simple brute-force attack scenario and is sufficient for demonstrating detection through logs.
+
+---
+
+### 3.3 Data Collection
+
+All evidence was collected from the local environment and stored in an organized folder structure.
+
+
+
+
+
+
+
