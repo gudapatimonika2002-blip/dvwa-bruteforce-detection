@@ -6,12 +6,12 @@ This project demonstrates how to simulate a brute-force login attack, detect it,
 
 We used **Damn Vulnerable Web Application (DVWA)** running on a local **XAMPP** stack and generated repeated login attempts against the DVWA login page. The resulting HTTP traffic was captured in **Apache access logs**, and a **detection timeline** was created to highlight suspicious login patterns.
 
-The repository includes:
+The repository contains:
 
 - `data/raw_logs/access.log` — Example Apache access log captured from a DVWA instance.
     This log contains all HTTP requests, including failed attempts.
 - `data/processed/Detection Timeline (from access.log).xlsx` — a spreadsheet containing the extracted / analysed events and a timeline derived from the raw log.
-- `screenshots/` — images showing the DVWA login page and example failed attempts.
+- `screenshots/` — images of the DVWA login page and some examples failed attempts.
 The main goal is to show how basic **log analysis** can reveal brute-force behavior, which is an important skill in cybersecurity and digital forensics.
 
 
@@ -29,14 +29,14 @@ Brute-force login attacks are one of the most common and persistent threats agai
 This project is relevant to:
 
 - **Cybersecurity** – understanding how attacks appear in server logs and how to detect them  
-- **Digital Forensics** – collecting, preserving, and interpreting log-based evidence  
+- **Digital Forensics** – collecting, preservation, and interpretion of log-based evidence  
 - **System/Network Administration** – learning how to monitor authentication activity and design defenses  
 
 **Why we chose this topic:**
 
 - It is hands-on but safe to perform in a local lab environment.  
 - It connects directly to real-world attack techniques.  
-- It helps build practical skills in:
+- It helps to build practical skills in:
   - Working with vulnerable web apps (DVWA)  
   - Understanding HTTP requests and status codes  
   - Reading and interpreting Apache logs  
