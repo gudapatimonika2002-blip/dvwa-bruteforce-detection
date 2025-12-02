@@ -105,9 +105,9 @@ This project is relevant to:
 
 ### 3.2 Brute-Force Attack Simulation
 
-The brute-force behavior was simulated manually in a safe, controlled way:
+The brute-force attack was done manually in a safe, controlled way:
 
-1. Logged out of DVWA to return to the login page.  
+1.  Firstly,Logged out of DVWA to return to the login page.  
 2. Performed multiple login attempts with:
    - Correct username: `admin`  
    - Incorrect passwords (various values), for example:
